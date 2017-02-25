@@ -16,6 +16,19 @@ class MinPriorityQueue[A](size: Int) extends Iterable[Edge[A]] {
     this
   }
 
+  def delMin(): Option[Edge[A]] = {
+    if (n == 0) None
+    else {
+      val min = pq(1)
+      swap(1, n)
+      map.remove(min)
+      pq(n) = null
+      n -= 1
+      sink(1)
+      Some(min)
+    }
+  }
+
   private def add(x: Edge[A]): Unit = {
     n += 1
     pq(n) = x
@@ -41,7 +54,7 @@ class MinPriorityQueue[A](size: Int) extends Iterable[Edge[A]] {
   // maintain the heap invariant by fixing the nodes >= k up the heap
   private def swim(k: Int): Unit = {
     def loop(k: Int, p: Int): Unit = {
-      if (k > 1 && pq(k) > pq(p)) {
+      if (k > 1 && pq(k) < pq(p)) {
         swap(k, p)
         loop(p, p/2)
       }
