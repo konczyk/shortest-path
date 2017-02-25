@@ -37,4 +37,26 @@ class MinPriorityQueueTest extends FunSuite {
     assert(pq.delMin() === None)
   }
 
+  test("increase priority") {
+    val pq = new MinPriorityQueue[Int](10)
+    // pq: 1,2 -> 3,2 -> 4,5 -> 5,1
+    pq ++= Set(Edge(5,1), Edge(1,2), Edge(4,5), Edge(3,2))
+    pq.updatePriority(Map(Edge(5,1) -> Edge(2,1)))
+
+    val actual = List(pq.delMin(), pq.delMin())
+    val expected = List(Some(Edge(1,2)), Some(Edge(2,1)))
+    assert(actual === expected)
+  }
+
+  test("decrease priority") {
+    val pq = new MinPriorityQueue[Int](10)
+    // pq: 1,2 -> 3,2 -> 4,5 -> 5,1
+    pq ++= Set(Edge(5,1), Edge(1,2), Edge(4,5), Edge(3,2))
+    pq.updatePriority(Map(Edge(1,2) -> Edge(8,2)))
+
+    val actual = (for (_ <- 1 to 4) yield pq.delMin()).map{case Some(x) => x}
+    val expected = List(Edge(3,2), Edge(4,5), Edge(5,1), Edge(8,2))
+    assert(actual === expected)
+  }
+
 }

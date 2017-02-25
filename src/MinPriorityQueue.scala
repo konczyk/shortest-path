@@ -29,6 +29,18 @@ class MinPriorityQueue[A](size: Int) extends Iterable[Edge[A]] {
     }
   }
 
+  def updatePriority(xs: Map[Edge[A], Edge[A]]): this.type = {
+    xs.foreach{case (oldEdge, newEdge) =>
+      val idx = map(oldEdge)
+      pq(idx) = newEdge
+      map.remove(oldEdge)
+      map.update(newEdge, idx)
+      if (newEdge.weight > oldEdge.weight) sink(idx)
+      else swim(idx)
+    }
+    this
+  }
+
   private def add(x: Edge[A]): Unit = {
     n += 1
     pq(n) = x
