@@ -3,48 +3,24 @@
   */
 import scala.collection.mutable
 
-class MinPriorityQueue[A](size: Int) extends Iterable[Edge[A]] {
+class MinPriorityQueue[A](size: Int) extends Iterable[V[A]] {
 
   private var n = 0
-  private val map = new mutable.HashMap[Edge[A],Int]()
-  private val pq = new Array[Edge[A]](size+1)
+  // map vertices to tuple of current score and pq index)
+  private val vmap = new mutable.HashMap[A,(Int, Int)]()
+  private val pq = new Array[V[A]](size+1)
 
-  def ++=(xs: TraversableOnce[Edge[A]]): this.type = {
+  def ++=(xs: TraversableOnce[V[A]]): this.type = {
     val from = n + 1
     for (x <- xs) add(x)
     heapify(from)
     this
   }
 
-  def delMin(): Option[Edge[A]] = {
-    if (n == 0) None
-    else {
-      val min = pq(1)
-      swap(1, n)
-      map.remove(min)
-      pq(n) = null
-      n -= 1
-      sink(1)
-      Some(min)
-    }
-  }
-
-  def updatePriority(xs: Map[Edge[A], Edge[A]]): this.type = {
-    xs.foreach{case (oldEdge, newEdge) =>
-      val idx = map(oldEdge)
-      pq(idx) = newEdge
-      map.remove(oldEdge)
-      map.update(newEdge, idx)
-      if (newEdge.weight > oldEdge.weight) sink(idx)
-      else swim(idx)
-    }
-    this
-  }
-
-  private def add(x: Edge[A]): Unit = {
+  private def add(v: V[A]): Unit = {
     n += 1
-    pq(n) = x
-    map.update(x, n)
+    pq(n) = v
+    vmap(v.name) = (v.score, n)
   }
 
   private def heapify(from: Int): Unit = {
@@ -61,6 +37,31 @@ class MinPriorityQueue[A](size: Int) extends Iterable[Edge[A]] {
       }
       loop(from to n)
     }
+  }
+
+  def delMin(): Option[V[A]] = {
+    if (n == 0) None
+    else {
+      val min = pq(1)
+      swap(1, n)
+      vmap -= min.name
+      pq(n) = null
+      n -= 1
+      sink(1)
+      Some(min)
+    }
+  }
+
+  def update(xs: TraversableOnce[V[A]]): this.type = {
+    xs.foreach{case V(newScore, name) =>
+      val (oldScore, idx) = vmap(name)
+      if (oldScore != newScore) {
+        pq(idx) = V(newScore, name)
+        vmap(name) = (newScore, idx)
+        if (newScore < oldScore) swim(idx) else sink(idx)
+      }
+    }
+    this
   }
 
   // maintain the heap invariant by fixing the nodes >= k up the heap
@@ -95,14 +96,15 @@ class MinPriorityQueue[A](size: Int) extends Iterable[Edge[A]] {
     val tmp = pq(n)
     pq(n) = pq(m)
     pq(m) = tmp
-    map += (pq(n) -> n, pq(m) -> m)
+    vmap += (pq(n).name -> (pq(n).score, n),
+             pq(m).name -> (pq(m).score, m))
   }
 
   // returns items from the heap in arbitrary order
-  override def iterator: Iterator[Edge[A]] = new Iterator[Edge[A]] {
+  override def iterator: Iterator[V[A]] = new Iterator[V[A]] {
     private var i = 1
     def hasNext: Boolean = i <= n
-    def next(): Edge[A] = {
+    def next(): V[A] = {
       val e = pq(i)
       i += 1
       e
