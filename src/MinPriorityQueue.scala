@@ -12,7 +12,7 @@ class MinPriorityQueue[A](size: Int) extends Iterable[V[A]] {
 
   def ++=(xs: TraversableOnce[V[A]]): this.type = {
     val from = n + 1
-    for (x <- xs) add(x)
+    for (x <- xs.filter(v => !vmap.contains(v.name))) add(x)
     heapify(from)
     this
   }

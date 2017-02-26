@@ -17,6 +17,15 @@ class MinPriorityQueueTest extends FunSuite {
     assert((pq ++= vertices).toSet === vertices)
   }
 
+  test("do not add duplicate vertices") {
+    val pq = new MinPriorityQueue[Int](10)
+    val v1 = V(5,1)
+    pq ++= Set(v1)
+    pq ++= Set(v1)
+
+    assert(pq.toSet === Set(v1))
+  }
+
   test("delMin from empty list") {
     val pq = new MinPriorityQueue[Int](4)
     assert(pq.delMin() === None)
@@ -27,7 +36,7 @@ class MinPriorityQueueTest extends FunSuite {
     val v1 = V(5,1)
     val v2 = V(1,2)
     val v3 = V(4,5)
-    val v4 = V(2,2)
+    val v4 = V(2,8)
     pq ++= Set(v1,v2,v3,v4)
 
     assert(pq.delMin() === Some(v2))
