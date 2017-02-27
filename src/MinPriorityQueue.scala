@@ -20,7 +20,7 @@ class MinPriorityQueue[A](size: Int) extends Iterable[V[A]] {
   private def add(v: V[A]): Unit = {
     n += 1
     pq(n) = v
-    vmap(v.name) = (v.score, n)
+    vmap(v.name) = (v.dist, n)
   }
 
   private def heapify(from: Int): Unit = {
@@ -52,19 +52,19 @@ class MinPriorityQueue[A](size: Int) extends Iterable[V[A]] {
     }
   }
 
-  def update(xs: TraversableOnce[V[A]]): this.type = {
+  def update(vs: TraversableOnce[V[A]]): this.type = {
     // update existing vertices if new scores are better
-    xs.filter(vmap isDefinedAt _.name).foreach{
-      case V(name,newScore) =>
-        val (oldScore, idx) = vmap(name)
-        if (newScore < oldScore) {
-          pq(idx) = V(name,newScore)
-          vmap(name) = (newScore, idx)
+    vs.filter(vmap isDefinedAt _.name).foreach{
+      case V(name, newDist, prev) =>
+        val (oldDist, idx) = vmap(name)
+        if (newDist < oldDist) {
+          pq(idx) = V(name, newDist, prev)
+          vmap(name) = (newDist, idx)
           swim(idx)
         }
       }
     // add new vertices
-    this ++= xs
+    this ++= vs
   }
 
   // maintain the heap invariant by fixing the nodes >= k up the heap
@@ -99,8 +99,8 @@ class MinPriorityQueue[A](size: Int) extends Iterable[V[A]] {
     val tmp = pq(n)
     pq(n) = pq(m)
     pq(m) = tmp
-    vmap += (pq(n).name -> (pq(n).score, n),
-             pq(m).name -> (pq(m).score, m))
+    vmap += (pq(n).name -> (pq(n).dist, n),
+             pq(m).name -> (pq(m).dist, m))
   }
 
   // returns items from the heap in arbitrary order
