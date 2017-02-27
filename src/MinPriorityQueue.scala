@@ -30,12 +30,12 @@ class MinPriorityQueue[A](size: Int) extends Iterable[V[A]] {
       def loop(ks: Seq[Int]): Unit = {
         if (ks.nonEmpty) {
           val sunk = ks.foldLeft(List[Int]()) {
-            (acc, k) => if (sink(k)) k :: acc else acc
+            (acc, k) => if (sink(k) && k > 1) k :: acc else acc
           }
-          loop(sunk.filter(_ % 2 == 0).map(_ / 2))
+          loop(sunk.map(_ / 2).distinct)
         }
       }
-      loop(from to n)
+      loop((n to from by -1).map(_ / 2).filter(_ > 0).distinct)
     }
   }
 
