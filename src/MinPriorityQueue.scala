@@ -53,15 +53,18 @@ class MinPriorityQueue[A](size: Int) extends Iterable[V[A]] {
   }
 
   def update(xs: TraversableOnce[V[A]]): this.type = {
-    xs.foreach{case V(newScore, name) =>
-      val (oldScore, idx) = vmap(name)
-      if (oldScore != newScore) {
-        pq(idx) = V(newScore, name)
-        vmap(name) = (newScore, idx)
-        if (newScore < oldScore) swim(idx) else sink(idx)
+    // update existing vertices if new scores are better
+    xs.filter(vmap isDefinedAt _.name).foreach{
+      case V(name,newScore) =>
+        val (oldScore, idx) = vmap(name)
+        if (newScore < oldScore) {
+          pq(idx) = V(name,newScore)
+          vmap(name) = (newScore, idx)
+          swim(idx)
+        }
       }
-    }
-    this
+    // add new vertices
+    this ++= xs
   }
 
   // maintain the heap invariant by fixing the nodes >= k up the heap

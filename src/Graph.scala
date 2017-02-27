@@ -1,4 +1,4 @@
-case class V[A](score: Int, name: A) extends Ordered[V[A]] {
+case class V[A](name: A, score: Int) extends Ordered[V[A]] {
   override def compare(that: V[A]):Int = this.score - that.score
 }
 
@@ -9,8 +9,8 @@ class Graph[A] private (map: Map[A, Set[V[A]]], val size: Int) {
 object Graph {
 
   // expected format
-  // vertex1  weight1,edge1  weight2,edge2 [...]
-  // vertex2  weight1,edge1  weight2,edge2 [...]
+  // vertex  vertex,edge  length vertex,edge length [...]
+  // vertex  vertex,edge  length vertex,edge length [...]
   // [...]
   // f function converts from String to a desired Vertex format (Int, String...)
   def apply[A](it: Iterator[String], f: String => A): Graph[A] = {
@@ -24,7 +24,7 @@ object Graph {
       val e = it.next.trim.split("\\s+")
       val k = f(e(0))
       val v = e.drop(1).map(_.split(",")).map{
-        case Array(a,b) => V(a.toInt, f(b))
+        case Array(a,b) => V(f(a), b.toInt)
       }.toSet
       build(it, map + (k -> v), vs + k ++ v.map(_.name), f)
     }
