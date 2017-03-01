@@ -16,7 +16,7 @@ class MinPriorityQueueTest extends FunSuite {
     val vs = Set(V(1,9,0), V(2,8,0), V(3,3,0), V(4,10,0), V(5,1,0), V(6,4,0))
     pq ++= vs
 
-    val actual = (for (_ <- 1 to 6) yield pq.delMin()).map{case Some(x) => x}
+    val actual = (for (_ <- 1 to 6) yield pq.delMin()) flatten
     val expected = vs.toList.sortBy(_.dist)
     assert(actual === expected)
   }
@@ -68,7 +68,7 @@ class MinPriorityQueueTest extends FunSuite {
     pq ++= vs
     pq.update(Set(V(2,8,7)))
 
-    val actual = (for (_ <- 1 to 4) yield pq.delMin()).map{case Some(x) => x}
+    val actual = (for (_ <- 1 to 4) yield pq.delMin()) flatten
     val expected = vs.toList.sortBy(_.dist)
     assert(actual === expected)
   }
