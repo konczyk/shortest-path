@@ -7,7 +7,7 @@ class MinPriorityQueue[A](size: Int) extends Iterable[V[A]] {
 
   private var n = 0
   // map vertices to tuple of current score and pq index)
-  private val vmap = new mutable.HashMap[A,(Int, Int)]()
+  private val vmap = new mutable.HashMap[A, (Double, Int)]()
   private val pq = new Array[V[A]](size+1)
 
   def ++=(xs: TraversableOnce[V[A]]): this.type = {

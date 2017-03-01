@@ -25,8 +25,8 @@ object Client extends App {
     .toList.sortBy(_._1)
     .foreach{
       case(t, (len, path)) =>
-        val len2 = s"($len)"
-        println(f"$t%-4s $len2%-6s ${path.mkString(" -> ")}")
+        val len2 = f"($len%.2f)"
+        println(f"$t%-4s $len2%-9s ${path.mkString(" -> ")}")
     }
 
 }

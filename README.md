@@ -23,14 +23,14 @@ the graph from the input stream:
 ```
 $ cat data/graph.txt | java -cp target/scala-2.12/shortest-path.jar Client -s 1
 
-2    (6)    3 -> 5 -> 4 -> 2
-3    (2)    3
-4    (4)    3 -> 5 -> 4
-5    (3)    3 -> 5
-6    (10)   3 -> 5 -> 4 -> 2 -> 6
-7    (11)   3 -> 5 -> 4 -> 2 -> 6 -> 7
-8    (9)    3 -> 5 -> 8
-9    (12)   3 -> 5 -> 4 -> 2 -> 6 -> 7 -> 9
+2    (6.00)    3 -> 5 -> 4 -> 2
+3    (2.00)    3
+4    (4.00)    3 -> 5 -> 4
+5    (3.00)    3 -> 5
+6    (10.00)   3 -> 5 -> 4 -> 2 -> 6
+7    (11.00)   3 -> 5 -> 4 -> 2 -> 6 -> 7
+8    (9.00)    3 -> 5 -> 8
+9    (12.00)   3 -> 5 -> 4 -> 2 -> 6 -> 7 -> 9
 ```
 
 Shortest distances and paths from the source vertex 1 to selected vertices in
@@ -39,7 +39,7 @@ the graph from the input stream:
 ```
 $ cat data/graph.txt | java -cp target/scala-2.12/shortest-path.jar Client -s 1 -d 2 3 4
 
-2    (6)    3 -> 5 -> 4 -> 2
-3    (2)    3
-4    (4)    3 -> 5 -> 4
+2    (6.00)    3 -> 5 -> 4 -> 2
+3    (2.00)    3
+4    (4.00)    3 -> 5 -> 4
 ```

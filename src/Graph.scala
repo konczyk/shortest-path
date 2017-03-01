@@ -1,4 +1,4 @@
-case class E[A](head: A, weight: Int)
+case class E[A](head: A, weight: Double)
 
 class Graph[A] private (graph: Map[A, Set[E[A]]], val size: Int) {
   def neighbors(vertex: A): Set[E[A]] = graph.getOrElse(vertex, Set())
@@ -22,7 +22,7 @@ object Graph {
       val e = it.next.trim.split("\\s+")
       val k = f(e(0))
       val v = e.drop(1).map(_.split(",")).map{
-        case Array(a,b) => E(f(a), b.toInt)
+        case Array(a,b) => E(f(a), b.toDouble)
       }.toSet
       build(it, graph + (k -> v), vs + k ++ v.map(_.head), f)
     }

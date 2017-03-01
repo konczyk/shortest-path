@@ -1,10 +1,10 @@
-case class V[A](name: A, dist: Int, prev: A) extends Ordered[V[A]] {
-  override def compare(that: V[A]):Int = this.dist - that.dist
+case class V[A](name: A, dist: Double, prev: A) extends Ordered[V[A]] {
+  override def compare(that: V[A]): Int = this.dist compareTo that.dist
 }
 
 class ShortestPath[A](graph: Graph[A]) {
 
-  type Path[B] = (Int, Vector[B])
+  type Path[B] = (Double, Vector[B])
 
   // return shortest paths from source to all other vertices in the graph
   def find(src: A): Map[A,Path[A]] = {
