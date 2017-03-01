@@ -43,3 +43,14 @@ $ cat data/graph.txt | java -cp target/scala-2.12/shortest-path.jar Client -s 1 
 3    (2.00)    3
 4    (4.00)    3 -> 5 -> 4
 ```
+
+Shortest distances and paths from the source vertex 1 to selected vertices in
+the large graph (10k vertices and ~123k edges) from the input stream:
+
+```
+$ zcat data/large.txt.gz | java -cp target/scala-2.12/shortest-path.jar Client -s 1 -d 1156 3287 6006
+
+1156 (0.07)    9826 -> 7897 -> 3845 -> 7239 -> 1156
+3287 (0.08)    6063 -> 9693 -> 1478 -> 5979 -> 3287
+6006 (0.18)    7596 -> 1127 -> 4847 -> 9571 -> 5721 -> 8844 -> 8518 -> 3047 -> 8261 -> 2610 -> 6006
+```
